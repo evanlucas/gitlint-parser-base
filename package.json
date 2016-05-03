@@ -1,0 +1,25 @@
+{
+  "name": "gitlint-parser-base",
+  "version": "1.0.0",
+  "description": "base parser for gitlint",
+  "main": "index.js",
+  "scripts": {
+    "pretest": "lintit",
+    "test": "tap test.js --cov"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "lintit": "~1.0.1",
+    "tap": "~5.7.1"
+  },
+  "license": "MIT",
+  "author": "Evan Lucas <evanlucas@me.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/evanlucas/gitlint-parser-base"
+  },
+  "homepage": "https://github.com/evanlucas/gitlint-parser-base",
+  "bugs": {
+    "url": "https://github.com/evanlucas/gitlint-parser-base/issues"
+  }
+}
