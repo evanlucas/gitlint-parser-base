@@ -37,7 +37,7 @@ module.exports = class Parser {
       if (matches) {
         const key = matches[1].toLowerCase()
         const val = matches[3]
-        if (key === 'date') {
+        if (key === 'date' || key === 'authordate') {
           this.date = val
         } else if (key === 'author') {
           this.author = val
@@ -46,6 +46,8 @@ module.exports = class Parser {
     }
 
     const body = splits.map((item) => {
+      // TODO(evanlucas) maybe support commit messages that are not
+      // indented by 4 spaces
       if (item.length) return item.slice(4, item.length)
       return ''
     })
