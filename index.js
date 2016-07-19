@@ -24,6 +24,25 @@ module.exports = class Parser {
     this.parse()
   }
 
+  toJSON() {
+    return {
+      sha: this.sha
+    , title: this.title
+    , author: this.author
+    , date: this.date
+    , body: this.body
+    }
+  }
+
+  inspect(depth, opts) {
+    if (opts && opts.showHidden) {
+      return Object.assign(this.toJSON(), {
+        _raw: this._raw
+      })
+    }
+    return this.toJSON()
+  }
+
   parse() {
     const splits = this._raw.split('\n')
     const commitLine = splits.shift()
