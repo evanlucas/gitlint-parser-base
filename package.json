@@ -9,7 +9,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "lintit": "~1.0.1",
+    "lintit": "^1.0.4",
     "tap": "^6.2.0"
   },
   "license": "MIT",
