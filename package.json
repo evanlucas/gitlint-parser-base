@@ -1,6 +1,6 @@
 {
   "name": "gitlint-parser-base",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "base parser for gitlint",
   "main": "index.js",
   "scripts": {
