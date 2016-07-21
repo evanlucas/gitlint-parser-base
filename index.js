@@ -4,8 +4,8 @@ const headingRE = /([^\:]+):([\s]+)(.*)/
 
 module.exports = class Parser {
   constructor(str, validator) {
-    if (typeof str !== 'string') {
-      throw new TypeError('str must be a string')
+    if (typeof str !== 'string' && typeof str !== 'object') {
+      throw new TypeError('str must be a string or an object')
     }
     if (!validator || typeof validator !== 'object') {
       throw new TypeError('validator is required and must be an object')
@@ -13,7 +13,19 @@ module.exports = class Parser {
     if (!validator.report) {
       throw new Error('validator.report() is required')
     }
-    this._raw = str
+    if (typeof str === 'string') {
+      this._type = 'cli'
+      this._rawstr = str
+      this._raw = str
+    } else {
+      this._type = 'github-api'
+      if (!str || !str.sha) {
+        throw new Error('Invalid api format')
+      }
+      this._raw = transformAPIJson(str)
+      this._rawstr = this._raw.message
+    }
+
     this.sha = null
     this.title = null
     this.author = null
@@ -44,6 +56,27 @@ module.exports = class Parser {
   }
 
   parse() {
+    switch (this._type) {
+      case 'cli':
+        this._parseCLI()
+        break
+      case 'github-api':
+        this._parseAPI()
+        break
+    }
+  }
+
+  _parseAPI() {
+    this.sha = this._raw.sha
+    this.date = this._raw.date
+    this.author = this._raw.author
+
+    const splits = this._rawstr.split('\n')
+    this.title = splits.shift()
+    this.body = splits
+  }
+
+  _parseCLI() {
     const splits = this._raw.split('\n')
     const commitLine = splits.shift()
 
@@ -82,4 +115,26 @@ module.exports = class Parser {
     , data: data
     })
   }
+}
+
+function transformAPIJson(obj) {
+  const commit = obj.commit && typeof obj.commit === 'object'
+    && (obj.commit.author || obj.commit.committer)
+    ? obj.commit
+    : obj
+
+  const out = {
+    sha: obj.sha
+  , author: null
+  , date: null
+  , message: commit.message
+  }
+
+  const author = commit.author || commit.committer
+  if (author) {
+    out.author = `${author.name} <${author.email}>`
+    out.date = author.date
+  }
+
+  return out
 }
